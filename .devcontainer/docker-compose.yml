@@ -1,12 +1,21 @@
-version: '3.8'
+version: '3'
 
+volumes: 
+  postgres_data:
+  redis:
 services:
-  app:
-    build:
+  user_frontend:
+    # See https://aka.ms/vscode-remote/containers/non-root for details.
+    build: 
       context: ..
       dockerfile: .devcontainer/Dockerfile
+      args:
+        USER_UID: 1000
+        USER_GID: 1000
+
     volumes:
-      - ..:/app:cached
-    ports:
-      - "8080:8080"
-    command: quasar dev
+      - ..:/workspace:cached 
+      - $HOME/.ssh/:/root/.ssh/ # Mount the ssh folder to authenticate with github
+
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity

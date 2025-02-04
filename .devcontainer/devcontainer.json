@@ -1,19 +1,29 @@
 {
-  "name": "Container de Desenvolvimento - Pão Mania Front-End",
-  "dockerComposeFile": "docker-compose.yml",
-  "service": "app",
-  "workspaceFolder": "/app",
-  "context": "..",
-  "shutdownAction": "stopCompose",
-  "extensions": [
-    "dbaeumer.vscode-eslint",
-    "esbenp.prettier-vscode",
-  ],
-  "settings": {
-    "editor.tabSize": 2,
-    "editor.insertSpaces": true,
-    "editor.detectIndentation": false
-  },
-  "postCreateCommand": "npm install",
+	"name": "pao_mania_front",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "user_frontend",
+	"workspaceFolder": "/workspace",
+	"shutdownAction": "stopCompose",
+
+
+	// Set *default* container specific settings.json values on container create.
+	"settings": {
+		"terminal.integrated.shell.linux": "/bin/bash"
+	},
+
+	// Add the IDs of extensions you want installed when the container is created.
+	"extensions": [
+		"dbaeumer.vscode-eslint"
+	],
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	"forwardPorts": [
+		8083
+	],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+		"postCreateCommand": "npm install"
+
+	// Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
+	// "remoteUser": "node"
 }
-  

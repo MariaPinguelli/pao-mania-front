@@ -8,8 +8,9 @@
       <router-view />
     </q-page-container>
 
-    <q-footer class="bg-grey-8 text-white row justify-center">
-      <div>Pão Mania | 2025</div>
+    <q-footer class="bg-grey-8 text-white row justify-between">
+      <div><strong>Pão Mania</strong> | 2025</div>
+      <div><strong>Contato:</strong> contato@pao.mania</div>
     </q-footer>
 
   </q-layout>
@@ -36,3 +37,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.q-footer{
+  padding: 1em;
+}
+</style>

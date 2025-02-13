@@ -70,7 +70,8 @@
 <script>
 export default {
   props: {
-    product: Object
+    product: Object,
+    action: { default: 'create'}
   },
   data() {
     return {
@@ -86,11 +87,20 @@ export default {
   methods: {
     registerProduct(){
       console.log("registerProduct");
+    },
+    editProduct(){
+      console.log('editProduct');
+    },
+    onSubmit(){
+      if (this.event == 'create') {
+        this.registerProduct();
+      }else if (this.event == 'edit'){
+        this.editProduct();
+      }
     }
-    
   },
   created(){
-
+    
   }
 };
 </script>

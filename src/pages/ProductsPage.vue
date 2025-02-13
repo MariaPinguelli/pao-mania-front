@@ -5,7 +5,7 @@
       :columns="columns"
       :rows="data"
       row-key="id"
-      @row-click="onRowClick"
+      @row-click="editProduct"
     >
       <template v-slot:top-right>
         <q-input 
@@ -118,12 +118,20 @@ export default {
         product => product.id == this.id
       );
     },
-    addNewProduct(event){
-      console.log("onRowClick", event);
+    addNewProduct(){
       this.$q.dialog({
         component: ProductDialog,
       })
     },
+    editProduct(row){
+      this.$q.dialog({
+        component: ProductDialog,
+        componentProps: {
+          product: row,
+          event: 'edit'
+        }
+      })
+    }
   },
   created(){
     this.data = this.unfilteredData;

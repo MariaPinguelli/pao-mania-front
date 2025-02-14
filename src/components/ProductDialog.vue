@@ -42,17 +42,22 @@
             dense
           />
 
-          <q-input
+          <!-- <q-input
             label="Valor unitário"
-            v-model.number="newProduct.unitPrice"
-            :rules="[ val => val != null || 'Campo vazio' ]"
-            type="number"
+            v-model="formattedPrice"
+            @update:model-value="formatPrice"
+            :rules="[ val => val !== '' || 'Campo vazio' ]"
+            type="text"
             class="inBetweenInput"
-            mask="#,##"
-            fill-mask="0"
-            reverse-fill-mask
             outlined
             dense
+          /> -->
+
+          <MoneyInput
+            label="Valor unitário" 
+            v-model="newProduct.unitPrice" 
+            size="xl"
+            autofocus
           />
 
           <q-btn 
@@ -68,7 +73,12 @@
 </template>
 
 <script>
+import MoneyInput from 'src/components/inputs/MoneyInput.vue';
+
 export default {
+  components: {
+    MoneyInput
+  },  
   props: {
     product: Object,
     action: { default: 'create'}
@@ -81,7 +91,8 @@ export default {
         quantity: null,
         unitPrice: null,
         description: null
-      }
+      },
+      formattedPrice: ""
     };
   },
   methods: {
@@ -92,15 +103,41 @@ export default {
       console.log('editProduct');
     },
     onSubmit(){
-      if (this.event == 'create') {
+      if (this.action == 'create') {
         this.registerProduct();
-      }else if (this.event == 'edit'){
+      }else if (this.action == 'edit'){
         this.editProduct();
       }
+    },
+    formatPrice(value) {
+      if (!value) {
+        this.formattedPrice = "";
+        this.newProduct.unitPrice = null;
+        return;
+      }
+
+      let price = parseFloat(value.toString().replace(",", "."));
+
+      if (isNaN(price)) {
+        this.formattedPrice = "";
+        this.newProduct.unitPrice = null;
+        return;
+      }
+
+      this.formattedPrice = new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+        minimumFractionDigits: 2,
+      }).format(value);
+
+      this.newProduct.unitPrice = value;
     }
   },
-  created(){
-    
+  created() {
+    if (this.action == "edit") {
+      this.newProduct = { ...this.product };
+      this.formatPrice(this.newProduct.unitPrice.toString());
+    }
   }
 };
 </script>

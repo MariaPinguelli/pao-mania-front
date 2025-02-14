@@ -40,6 +40,7 @@
 
 <script>
 import ProductDialog from 'src/components/ProductDialog.vue';
+import { toRaw } from "vue";
 
 export default {
   data() {
@@ -123,12 +124,12 @@ export default {
         component: ProductDialog,
       })
     },
-    editProduct(row){
+    editProduct(event, row){
       this.$q.dialog({
         component: ProductDialog,
         componentProps: {
-          product: row,
-          event: 'edit'
+          product: toRaw(row),
+          action: 'edit'
         }
       })
     }

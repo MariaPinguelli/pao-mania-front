@@ -41,23 +41,16 @@
             outlined
             dense
           />
-
-          <!-- <q-input
+          <q-input
             label="Valor unitário"
-            v-model="formattedPrice"
-            @update:model-value="formatPrice"
-            :rules="[ val => val !== '' || 'Campo vazio' ]"
-            type="text"
+            v-model="newProduct.unitPrice"
+            :rules="[ val => val != null || 'Campo vazio' ]"
             class="inBetweenInput"
+            mask="#.##"
+            fill-mask="0"
+            reverse-fill-mask
             outlined
             dense
-          /> -->
-
-          <MoneyInput
-            label="Valor unitário" 
-            v-model="newProduct.unitPrice" 
-            size="xl"
-            autofocus
           />
 
           <q-btn 
@@ -73,12 +66,8 @@
 </template>
 
 <script>
-import MoneyInput from 'src/components/inputs/MoneyInput.vue';
 
 export default {
-  components: {
-    MoneyInput
-  },  
   props: {
     product: Object,
     action: { default: 'create'}

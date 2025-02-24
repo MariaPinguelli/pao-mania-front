@@ -53,12 +53,22 @@
             dense
           />
 
-          <q-btn 
-            color="grey-8" 
-            label="Cadastrar" 
-            type="submit"
-            :disable="isFormValid"
-          />
+          <div class="flex row">
+            <q-btn 
+              color="grey-8" 
+              label="Cadastrar" 
+              type="submit"
+              :disable="isFormValid"
+            />
+
+            <q-btn
+              v-if="action == 'edit'"
+              style="margin-left: auto;"
+              color="red-8" 
+              label="Excluir produto" 
+              @click="deleteProduct"
+            />
+          </div>
         </q-form>
       </q-card-section>
     </q-card>
@@ -120,6 +130,21 @@ export default {
       }).format(value);
 
       this.newProduct.unitPrice = value;
+    },
+    deleteProduct(){
+      this.$q.dialog({
+        title: 'Excluir produto: ' + this.newProduct.name,
+        message: 'Tem certeza que quer excluir este produto?',
+        ok: {
+          label: 'Sim, tenho certeza'
+        },
+        cancel: {
+          label: 'Cancelar',
+          color: 'red-8'
+        }
+      }).onOk(() => {
+        console.log("Produto excluído");
+      })
     }
   },
   created() {

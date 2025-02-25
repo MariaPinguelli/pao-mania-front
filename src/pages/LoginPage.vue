@@ -74,15 +74,25 @@ export default {
           email: this.email,
           password: this.password,
         }
-      })
-        
-      this.$q.notify({
-        type: "positive",
-        message: "Sucesso!",
-        position: "top",
-      });
+      }).then((res) => {
 
-      this.$router.push("users");
+        localStorage.setItem('currentUser', res.data.user);
+        localStorage.setItem('token', res.data.token);
+
+        this.$q.notify({
+          type: "positive",
+          message: "Sucesso!",
+          position: "top",
+        });
+
+        this.$router.push("users");
+      }).catch((err) => {
+        this.$q.notify({
+          type: "negative",
+          message: "Erro: " + err.message,
+          position: "top",
+        });
+      })
     },
     isFormValid(){
       return this.$refs.form ? this.$refs.form.validate() : false;

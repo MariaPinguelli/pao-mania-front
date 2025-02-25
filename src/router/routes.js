@@ -1,32 +1,36 @@
 const routes = [
   {
-    path: '/',
-    component: () => import('layouts/MainLayout.vue'),  // Layout principal
+    path: "/",
+    component: () => import("layouts/AuthLayout.vue"),
+    redirect: "/login",
     children: [
       {
-        path: '',
-        component: () => {
-          const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';  // Ou Vuex
-          return isLoggedIn
-            ? import('pages/HomePage.vue')  // Página principal
-            : import('pages/LoginPage.vue'); // Página de login
-        }
-      }
-    ]
+        path: "login",
+        component: () => import("pages/LoginPage.vue"),
+        name: "login",
+        meta: {
+          role: "guest",
+          fail: "/user/HomePage",
+        },
+      },
+      {
+        path: "register",
+        component: () => import("pages/RegisterPage.vue"),
+        name: "register",
+      },
+    ],
   },
-  
   {
-    path: '/login',
-    component: () => import('layouts/AuthLayout.vue'), // Layout de login
+    path: "/user",
+    component: () => import("layouts/MainLayout.vue"),
     children: [
       {
-        path: '',
-        component: () => import('pages/LoginPage.vue')
-      }
+        path: "homepage",
+        name: "homepage",
+        component: () => import("pages/HomePage.vue"),
+      },
     ]
   },
-
-  // Sempre deixe isso por último
   {
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue')

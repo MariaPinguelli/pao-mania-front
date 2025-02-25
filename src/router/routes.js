@@ -10,7 +10,7 @@ const routes = [
         name: "login",
         meta: {
           role: "guest",
-          fail: "/user/HomePage",
+          fail: "homepage",
         },
       },
       {
@@ -21,7 +21,7 @@ const routes = [
     ],
   },
   {
-    path: "/user",
+    path: "/",
     component: () => import("layouts/MainLayout.vue"),
     children: [
       {

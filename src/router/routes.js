@@ -1,18 +1,54 @@
 const routes = [
   {
-    path: '/',
-    component: () => import('layouts/MainLayout.vue'),
+    path: "/",
+    component: () => import("layouts/AuthLayout.vue"),
+    redirect: "/login",
     children: [
-      { path: '', component: () => import('pages/OrdersPage.vue') }
+      {
+        path: "login",
+        component: () => import("pages/LoginPage.vue"),
+        name: "login",
+        meta: {
+          role: "guest",
+          fail: "homepage",
+        },
+      },
+      {
+        path: "register",
+        component: () => import("pages/RegisterPage.vue"),
+        name: "register",
+      },
+    ],
+  },
+  {
+    path: "/",
+    component: () => import("layouts/MainLayout.vue"),
+    children: [
+      {
+        path: "homepage",
+        name: "homepage",
+        component: () => import("pages/HomePage.vue"),
+      },
+      {
+        path: "users",
+        name: "users",
+        component: () => import("pages/UsersPage.vue"),
+      },{
+        path: "products",
+        component: () => import("pages/ProductsPage.vue"),
+        name: "products",
+      },
+      { 
+        path: 'orders', 
+        component: () => import('pages/OrdersPage.vue'),
+        name: "orders"
+      }
     ]
   },
-
-  // Always leave this as last one,
-  // but you can also remove it
   {
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue')
   }
-]
+];
 
-export default routes
+export default routes;

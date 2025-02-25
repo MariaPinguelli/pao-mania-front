@@ -31,12 +31,15 @@
           </template>
         </q-input>
 
+        <q-btn label="Criar Pedido" color="positive" @click="createOrder" />
       </template>
     </q-table>
   </q-page>
 </template>
 
 <script>
+import OrderDialog from 'components/OrderDialog.vue';
+
 export default {
   props: {
     user: Object
@@ -48,58 +51,68 @@ export default {
       columns: [
         { name: 'id', label: 'ID', field: 'id', align: 'left', sortable: true },
         { name: 'name', label: 'Cliente', field: 'name', align: 'left', sortable: true },
-        { name: 'items', label: 'Items', field: 'items', align: 'left', sortable: true, format: (val) => val.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })},
-        { name: 'total', label: 'Total', field: 'total', align: 'left', sortable: true },
+        { 
+          name: 'items', 
+          label: 'Itens', 
+          field: 'items', 
+          align: 'left', 
+          sortable: true, 
+          format: val => val.map(item => `${item.product} x${item.quantity}`).join(", ")
+        },
+        { 
+          name: 'total', 
+          label: 'Total', 
+          field: 'total', 
+          align: 'left', 
+          sortable: true, 
+          format: val => val.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) 
+        },
       ],
       unfilteredData: [
         {
           id: 1,
-          name: "Pão Francês",
-          quantity: 100,
-          unitPrice: 0.80,
-          description: "Pão crocante por fora e macio por dentro, feito diariamente."
+          name: "João Silva",
+          items: [
+            { product: "Pão Francês", quantity: 5, price: 1.50 },
+            { product: "Bolo de Chocolate", quantity: 1, price: 20.00 }
+          ],
+          total: 27.50
         },
         {
           id: 2,
-          name: "Bolo de Chocolate",
-          quantity: 10,
-          unitPrice: 35.00,
-          description: "Bolo caseiro de chocolate com cobertura de brigadeiro."
+          name: "Maria Fernanda",
+          items: [
+            { product: "Croissant", quantity: 2, price: 5.00 },
+            { product: "Brioche", quantity: 3, price: 4.50 }
+          ],
+          total: 23.50
         },
         {
           id: 3,
-          name: "Croissant",
-          quantity: 20,
-          unitPrice: 5.00,
-          description: "Croissant folhado e amanteigado, perfeito para o café da manhã."
+          name: "Carlos Oliveira",
+          items: [
+            { product: "Rosquinha", quantity: 10, price: 2.00 },
+            { product: "Pão de Queijo", quantity: 6, price: 3.50 }
+          ],
+          total: 47.00
         },
         {
           id: 4,
-          name: "Sonho",
-          quantity: 15,
-          unitPrice: 6.50,
-          description: "Massa fofinha recheada com creme de baunilha e polvilhada com açúcar."
+          name: "Ana Souza",
+          items: [
+            { product: "Baguete", quantity: 2, price: 6.00 },
+            { product: "Sonho", quantity: 4, price: 3.75 }
+          ],
+          total: 27.00
         },
         {
           id: 5,
-          name: "Pão de Queijo",
-          quantity: 50,
-          unitPrice: 2.50,
-          description: "Pão de queijo mineiro feito com queijo artesanal."
-        },
-        {
-          id: 6,
-          name: "Torta de Frango",
-          quantity: 8,
-          unitPrice: 45.00,
-          description: "Torta recheada com frango desfiado, milho e requeijão."
-        },
-        {
-          id: 7,
-          name: "Rosquinha de Canela",
-          quantity: 30,
-          unitPrice: 3.00,
-          description: "Rosquinha doce coberta com açúcar e canela."
+          name: "Lucas Mendes",
+          items: [
+            { product: "Torta de Morango", quantity: 1, price: 35.00 },
+            { product: "Pão Integral", quantity: 2, price: 7.50 }
+          ],
+          total: 50.00
         }
       ],
       data: []
@@ -116,8 +129,29 @@ export default {
         product => product.id == this.id
       );
     },
+    createOrder(){
+      console.log("Criando um novo pedido...");
+    },
+    onRowClick(row) {
+      this.$q.dialog({
+        component: OrderDialog,
+        componentProps: { order: row }
+      }).onOk((action) => {
+        if (action === "delete") {
+          this.deleteOrder(row);
+        } else if (action === "confirmPickup") {
+          this.confirmPickup(row);
+        }
+      });
+    },
+    deleteOrder(order) {
+      console.log(`Pedido ${order.id} excluído.`);
+    },
+    confirmPickup(order) {
+      console.log(`Pedido ${order.id} retirado.`);
+    }
   },
-  created(){
+  created() {
     this.data = this.unfilteredData;
   }
 };

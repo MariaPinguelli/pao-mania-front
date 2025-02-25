@@ -70,7 +70,7 @@ export default {
   methods: {
     async logIn(){
       axios.post(process.env.API_URL+"/users/sign_in", {
-        session: {
+        user: {
           email: this.email,
           password: this.password,
         }

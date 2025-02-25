@@ -1,5 +1,5 @@
 <template>
-  <q-page padding class="column content-center">
+  <q-page padding class="column content-center justify-center">
     <h5 class="text-center">Criar conta</h5>
     <q-card padding class="column">
       <q-form ref="form" @submit="registerUser">
@@ -74,6 +74,12 @@
           label="Cadastrar" 
           type="submit"
         />
+        <q-btn 
+          color="grey-8" 
+          label="Voltar"
+          flat
+          @click="goBack"
+        />
       </q-form>
     </q-card>
   </q-page>
@@ -135,6 +141,7 @@ export default {
         //   console.log("Usuário registrado com sucesso!", response.data);
 
         //   this.resetForm();
+        this.$router.push("login");
         // })
         // .catch(error => {
         //   this.$q.notify({
@@ -143,6 +150,9 @@ export default {
         //     position: "top",
         //   });
         // });
+    },
+    goBack(){
+      this.$router.push("login")
     }
   },
   created() {

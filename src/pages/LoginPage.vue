@@ -1,5 +1,5 @@
 <template>
-  <q-page padding class="column content-center">
+  <q-page padding class="column content-center justify-center">
   
     <q-card padding>
       <q-img src="../assets/placeholder.png" />
@@ -40,6 +40,15 @@
           type="submit"
           :disable="isFormValid()"
         />
+        <div>
+          Ou
+        </div>
+        <q-btn 
+          color="grey-8" 
+          label="Cadastrar"
+          flat
+          @click="goToRegister"
+        />
       </q-form>
     </q-card>
   </q-page>
@@ -59,9 +68,13 @@ export default {
   methods: {
     logIn(){
       console.log("Login");
+      this.$router.push('user/homepage')
     },
     isFormValid(){
       return this.$refs.form ? this.$refs.form.validate() : false;
+    },
+    goToRegister(){
+      this.$router.push("register")
     }
   },
   created() {

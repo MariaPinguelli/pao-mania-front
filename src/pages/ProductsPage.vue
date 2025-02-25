@@ -5,7 +5,7 @@
       :columns="columns"
       :rows="data"
       row-key="id"
-      @row-click="onRowClick"
+      @row-click="editProduct"
     >
       <template v-slot:top-right>
         <q-input 
@@ -40,6 +40,7 @@
 
 <script>
 import ProductDialog from 'src/components/ProductDialog.vue';
+import { toRaw } from "vue";
 
 export default {
   data() {
@@ -118,12 +119,20 @@ export default {
         product => product.id == this.id
       );
     },
-    addNewProduct(event){
-      console.log("onRowClick", event);
+    addNewProduct(){
       this.$q.dialog({
         component: ProductDialog,
       })
     },
+    editProduct(event, row){
+      this.$q.dialog({
+        component: ProductDialog,
+        componentProps: {
+          product: toRaw(row),
+          action: 'edit'
+        }
+      })
+    }
   },
   created(){
     this.data = this.unfilteredData;

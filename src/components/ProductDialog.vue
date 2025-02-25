@@ -41,14 +41,12 @@
             outlined
             dense
           />
-
           <q-input
             label="Valor unitário"
-            v-model.number="newProduct.unitPrice"
+            v-model="newProduct.unitPrice"
             :rules="[ val => val != null || 'Campo vazio' ]"
-            type="number"
             class="inBetweenInput"
-            mask="#,##"
+            mask="#.##"
             fill-mask="0"
             reverse-fill-mask
             outlined
@@ -68,9 +66,11 @@
 </template>
 
 <script>
+
 export default {
   props: {
-    product: Object
+    product: Object,
+    action: { default: 'create'}
   },
   data() {
     return {
@@ -80,17 +80,53 @@ export default {
         quantity: null,
         unitPrice: null,
         description: null
-      }
+      },
+      formattedPrice: ""
     };
   },
   methods: {
     registerProduct(){
       console.log("registerProduct");
-    }
-    
-  },
-  created(){
+    },
+    editProduct(){
+      console.log('editProduct');
+    },
+    onSubmit(){
+      if (this.action == 'create') {
+        this.registerProduct();
+      }else if (this.action == 'edit'){
+        this.editProduct();
+      }
+    },
+    formatPrice(value) {
+      if (!value) {
+        this.formattedPrice = "";
+        this.newProduct.unitPrice = null;
+        return;
+      }
 
+      let price = parseFloat(value.toString().replace(",", "."));
+
+      if (isNaN(price)) {
+        this.formattedPrice = "";
+        this.newProduct.unitPrice = null;
+        return;
+      }
+
+      this.formattedPrice = new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+        minimumFractionDigits: 2,
+      }).format(value);
+
+      this.newProduct.unitPrice = value;
+    }
+  },
+  created() {
+    if (this.action == "edit") {
+      this.newProduct = { ...this.product };
+      this.formatPrice(this.newProduct.unitPrice.toString());
+    }
   }
 };
 </script>

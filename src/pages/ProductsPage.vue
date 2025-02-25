@@ -31,16 +31,17 @@
           </template>
         </q-input>
 
+        <q-btn label="Novo Produto" icon="add" @click="addNewProduct"/>
+
       </template>
     </q-table>
   </q-page>
 </template>
 
 <script>
+import ProductDialog from 'src/components/ProductDialog.vue';
+
 export default {
-  props: {
-    user: Object
-  },
   data() {
     return {
       id: null,
@@ -116,6 +117,12 @@ export default {
       this.data = this.unfilteredData.filter(
         product => product.id == this.id
       );
+    },
+    addNewProduct(event){
+      console.log("onRowClick", event);
+      this.$q.dialog({
+        component: ProductDialog,
+      })
     },
   },
   created(){

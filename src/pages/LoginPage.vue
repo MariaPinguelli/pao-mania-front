@@ -68,7 +68,7 @@ export default {
   methods: {
     logIn(){
       console.log("Login");
-      this.$router.push('user/homepage')
+      this.$router.push('users')
     },
     isFormValid(){
       return this.$refs.form ? this.$refs.form.validate() : false;

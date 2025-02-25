@@ -1,19 +1,26 @@
-import axios from 'axios'
-import { LocalStorage } from 'quasar'
+import { boot } from 'quasar';
+import axios from 'axios';
+import { LocalStorage } from 'quasar';
 
 const axiosInstance = axios.create({
-    baseURL: process.env.API_URL,
+  baseURL: process.env.API_URL,
+  headers: {
     Accept: 'application/json',
-    'Content-Type': 'application/json'
-})
-axiosInstance.interceptors.request.use(function (config) {
-    // Do something before request is sent
-    config.headers["Authorization"] = `Bearer ${LocalStorage.getItem("token")}`
-    return config;
+    'Content-Type': 'application/json',
+  },
 });
 
-export default ({ Vue }) => {
-    Vue.prototype.$axios = axiosInstance
-}
+axiosInstance.interceptors.request.use((config) => {
+  const token = LocalStorage.getItem('token');
+  if (token) {
+    config.headers['Authorization'] = `Bearer ${token}`;
+  }
+  return config;
+});
 
-export { axiosInstance }
+export default boot(({ app }) => {
+  app.config.globalProperties.$axios = axiosInstance;
+  app.config.globalProperties.$api = axiosInstance;
+});
+
+export { axiosInstance };

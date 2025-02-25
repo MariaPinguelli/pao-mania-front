@@ -55,6 +55,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -66,9 +68,21 @@ export default {
   computed: {
   },
   methods: {
-    logIn(){
-      console.log("Login");
-      this.$router.push('users')
+    async logIn(){
+      axios.post(process.env.API_URL+"/users/sign_in", {
+        session: {
+          email: this.email,
+          password: this.password,
+        }
+      })
+        
+      this.$q.notify({
+        type: "positive",
+        message: "Sucesso!",
+        position: "top",
+      });
+
+      this.$router.push("users");
     },
     isFormValid(){
       return this.$refs.form ? this.$refs.form.validate() : false;

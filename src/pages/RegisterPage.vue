@@ -11,7 +11,7 @@
           outlined
           dense
         />
-        <q-input 
+        <!-- <q-input 
           label="Número"
           v-model="user.phoneNumber"
           mask="(##) # #### - ####"
@@ -19,7 +19,7 @@
           class="inBetweenInput"
           outlined
           dense
-        />
+        /> -->
         <q-input 
           label="E-mail" 
           v-model="user.email"
@@ -86,7 +86,7 @@
 </template>
 
 <script>
-// import axios from 'axios';
+import axios from 'axios';
 
 export default {
   data() {
@@ -99,14 +99,13 @@ export default {
       },
       confirmPassword: null,
       isPwd: true,
-      formValid: false, // Inicia o formulário inválido
+      formValid: false,
     };
   },
   methods: {
     validateForm() {
-      // Quando o formulário for enviado, realiza a validação
       this.$refs.form.validate().then(isValid => {
-        this.formValid = isValid; // Habilita ou desabilita o botão baseado na validação
+        this.formValid = isValid;
       });
     },
     resetForm() {
@@ -125,38 +124,35 @@ export default {
       let userData = { ...this.user };
       delete userData.registration; 
 
-      // axios.post(process.env.API_URL+"/users", {
-      //     name: this.user.name,
-      //     // phone_number: this.user.phoneNumber,
-      //     email: this.user.email,
-      //     password: this.user.password,
-      //   })
-      //   .then(response => {
+      axios.post(process.env.API_URL+"/users", {
+        registration: {
+          name: this.user.name,
+          email: this.user.email,
+          password: this.user.password,
+        }})
+        .then(response => {
           this.$q.notify({
             type: "positive",
             message: "Cadastro realizado com sucesso!",
             position: "top",
           });
 
-        //   console.log("Usuário registrado com sucesso!", response.data);
+          console.log("Usuário registrado com sucesso!", response.data);
 
-        //   this.resetForm();
+          this.resetForm();
         this.$router.push("login");
-        // })
-        // .catch(error => {
-        //   this.$q.notify({
-        //     type: "negative",
-        //     message: error.response?.data?.message || "Erro ao cadastrar. Verifique os dados.",
-        //     position: "top",
-        //   });
-        // });
+        })
+        .catch(error => {
+          this.$q.notify({
+            type: "negative",
+            message: error.response?.data?.message || "Erro ao cadastrar. Verifique os dados.",
+            position: "top",
+          });
+        });
     },
     goBack(){
       this.$router.push("login")
     }
-  },
-  created() {
-    // Removido código de console.log
   },
 };
 </script>

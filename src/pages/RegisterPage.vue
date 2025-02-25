@@ -55,7 +55,7 @@
           :type="isPwd ? 'password' : 'text'"
           :rules="[ 
             val => val != null,
-            val => val === user.password
+            val => val === user.password || 'As senhas não coincidem'
           ]"
           class="inBetweenInput"
           outlined
@@ -73,7 +73,6 @@
           color="grey-8" 
           label="Cadastrar" 
           type="submit"
-          :disable="isFormValid"
         />
       </q-form>
     </q-card>
@@ -81,6 +80,8 @@
 </template>
 
 <script>
+// import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -91,21 +92,61 @@ export default {
         password: null,
       },
       confirmPassword: null,
-      isPwd: true
+      isPwd: true,
+      formValid: false, // Inicia o formulário inválido
     };
   },
-  computed: {
-    isFormValid(){
-      return this.$refs.form.validate()
-    }
-  },
   methods: {
-    registerUser(){
-      console.log("Usuário Registrado");
+    validateForm() {
+      // Quando o formulário for enviado, realiza a validação
+      this.$refs.form.validate().then(isValid => {
+        this.formValid = isValid; // Habilita ou desabilita o botão baseado na validação
+      });
+    },
+    resetForm() {
+      this.user = { name: "", phoneNumber: "", email: "", password: "" };
+      this.confirmPassword = "";
+      this.formValid = false;
+      this.$refs.form.resetValidation();
+    },
+    async registerUser() {
+      // Chama a validação antes de enviar o formulário
+      const isValid = await this.$refs.form.validate();
+      if (!isValid) {
+        return; // Se o formulário não for válido, não prossegue
+      }
+
+      let userData = { ...this.user };
+      delete userData.registration; 
+
+      // axios.post(process.env.API_URL+"/users", {
+      //     name: this.user.name,
+      //     // phone_number: this.user.phoneNumber,
+      //     email: this.user.email,
+      //     password: this.user.password,
+      //   })
+      //   .then(response => {
+          this.$q.notify({
+            type: "positive",
+            message: "Cadastro realizado com sucesso!",
+            position: "top",
+          });
+
+        //   console.log("Usuário registrado com sucesso!", response.data);
+
+        //   this.resetForm();
+        // })
+        // .catch(error => {
+        //   this.$q.notify({
+        //     type: "negative",
+        //     message: error.response?.data?.message || "Erro ao cadastrar. Verifique os dados.",
+        //     position: "top",
+        //   });
+        // });
     }
   },
   created() {
-    
+    // Removido código de console.log
   },
 };
 </script>
@@ -117,8 +158,6 @@ export default {
 }
 
 .inBetweenInput{
-  /* top | right | bottom | left */
-  /* top and bottom | left and right */
   margin: 0.3em 1em;
 }
 

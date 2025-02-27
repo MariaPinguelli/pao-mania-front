@@ -3,7 +3,8 @@
     <q-card>
       <q-card-section>
         <div class="row justify-between items-center">
-          <div class="text-h6">Adicionar Produto</div>
+          <div v-if="this.action === 'create'" class="text-h6">Adicionar Produto</div>
+          <div v-else class="text-h6">Editar Produto</div>
           <div class="cursor-pointer" style="margin-left: 12em; width: fit-content;" @click="$emit('hide')"> 
             <q-icon name="close"/>
             Fechar
@@ -12,7 +13,7 @@
       </q-card-section>
 
       <q-card-section>
-        <q-form ref="form" @submit="registerProduct">
+        <q-form ref="form" @submit="onSubmit">
           <q-input 
             label="Nome" 
             v-model="newProduct.name"
@@ -33,17 +34,8 @@
           />
 
           <q-input
-            label="Quantidade em estoque"
-            v-model.number="newProduct.quantity"
-            :rules="[ val => val != null || 'Campo vazio' ]"
-            type="number"
-            class="inBetweenInput"
-            outlined
-            dense
-          />
-          <q-input
             label="Valor unitário"
-            v-model="newProduct.unitPrice"
+            v-model="newProduct.price"
             :rules="[ val => val != null || 'Campo vazio' ]"
             class="inBetweenInput"
             mask="#.##"
@@ -53,12 +45,22 @@
             dense
           />
 
-          <q-btn 
-            color="grey-8" 
-            label="Cadastrar" 
-            type="submit"
-            :disable="isFormValid"
-          />
+          <div class="flex row">
+            <q-btn 
+              :color="action === 'create' ? 'green-8' : 'blue-8'" 
+              :label="action === 'create' ? 'Cadastrar' : 'Editar'" 
+              type="submit"
+              :disable="isFormValid"
+            />
+
+            <q-btn 
+              v-if="action === 'edit'"
+              color="red-8"
+              style="margin-left: auto;"
+              label="Excluir produto"
+              @click="deleteProduct"
+            />
+          </div>
         </q-form>
       </q-card-section>
     </q-card>
@@ -77,23 +79,77 @@ export default {
       isVisible: false,
       newProduct: {
         name: null,
-        quantity: null,
-        unitPrice: null,
+        price: null,
         description: null
       },
       formattedPrice: ""
     };
   },
   methods: {
-    registerProduct(){
-      console.log("registerProduct");
+    async addNewProduct(){
+      await this.$axios.post("/products", {
+        product: this.newProduct
+      })
+      .then(() => {
+        this.$q.notify({
+          type: "positive",
+          message: "Produto adicionado!",
+          position: "top",
+        });
+        
+        this.isVisible = false;
+        return;
+      }).catch((err) => {
+        this.$q.notify({
+          type: "negative",
+          message: "Erro ao criar produto :( - " + err.message,
+          position: "top",
+        });
+      })
     },
-    editProduct(){
-      console.log('editProduct');
+    async editProduct(){
+      await this.$axios.patch("/products/"+this.newProduct.id, {
+        product: this.newProduct
+      })
+      .then(() => {
+        this.$q.notify({
+          type: "positive",
+          message: "Produto atualizado!",
+          position: "top",
+        });
+        
+        this.isVisible = false;
+        return;
+      }).catch((err) => {
+        this.$q.notify({
+          type: "negative",
+          message: "Erro ao atualizar produto - " + err.message,
+          position: "top",
+        });
+      })
+    },
+    async deleteProduct(){
+      await this.$axios.delete("/products/"+this.newProduct.id)
+      .then(() => {
+        this.$q.notify({
+          type: "positive",
+          message: "Produto excluído!",
+          position: "top",
+        });
+        
+        this.isVisible = false;
+        return;
+      }).catch((err) => {
+        this.$q.notify({
+          type: "negative",
+          message: "Erro ao deletar produto - " + err.message,
+          position: "top",
+        });
+      })
     },
     onSubmit(){
       if (this.action == 'create') {
-        this.registerProduct();
+        this.addNewProduct();
       }else if (this.action == 'edit'){
         this.editProduct();
       }
@@ -101,7 +157,7 @@ export default {
     formatPrice(value) {
       if (!value) {
         this.formattedPrice = "";
-        this.newProduct.unitPrice = null;
+        this.newProduct.price = null;
         return;
       }
 
@@ -109,7 +165,7 @@ export default {
 
       if (isNaN(price)) {
         this.formattedPrice = "";
-        this.newProduct.unitPrice = null;
+        this.newProduct.price = null;
         return;
       }
 
@@ -119,13 +175,13 @@ export default {
         minimumFractionDigits: 2,
       }).format(value);
 
-      this.newProduct.unitPrice = value;
+      this.newProduct.price = value;
     }
   },
   created() {
     if (this.action == "edit") {
       this.newProduct = { ...this.product };
-      this.formatPrice(this.newProduct.unitPrice.toString());
+      this.formatPrice(this.newProduct.price.toString());
     }
   }
 };

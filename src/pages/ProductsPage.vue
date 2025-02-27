@@ -24,14 +24,14 @@
           placeholder="Pesquisar nome" 
           @update:model-value="searchByName"
           dense 
-          style="margin-right: 3em;"
+          style="margin-right: 3em; margin-left: 3em;"
         >
           <template v-slot:append>
             <q-icon name="search" class="cursor-pointer" @click="searchByName"/>
           </template>
         </q-input>
 
-        <q-btn label="Novo Produto" icon="add" @click="addNewProduct"/>
+        <q-btn flat label="Novo Produto" icon="add" @click="addNewProduct"/>
 
       </template>
     </q-table>
@@ -50,60 +50,10 @@ export default {
       columns: [
         { name: 'id', label: 'ID', field: 'id', align: 'left', sortable: true },
         { name: 'name', label: 'Nome', field: 'name', align: 'left', sortable: true },
-        { name: 'quantity', label: 'Quantidade', field: 'quantity', align: 'left', sortable: true },
-        { name: 'unitPrice', label: 'Preço Unitário', field: 'unitPrice', align: 'left', sortable: true, format: (val) => val.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })},
+        { name: 'price', label: 'Preço Unitário', field: 'price', align: 'left', sortable: true, format: (val) => val.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })},
         { name: 'description', label: 'Descrição', field: 'description', align: 'left', sortable: true }
       ],
       unfilteredData: [
-        {
-          id: 1,
-          name: "Pão Francês",
-          quantity: 100,
-          unitPrice: 0.80,
-          description: "Pão crocante por fora e macio por dentro, feito diariamente."
-        },
-        {
-          id: 2,
-          name: "Bolo de Chocolate",
-          quantity: 10,
-          unitPrice: 35.00,
-          description: "Bolo caseiro de chocolate com cobertura de brigadeiro."
-        },
-        {
-          id: 3,
-          name: "Croissant",
-          quantity: 20,
-          unitPrice: 5.00,
-          description: "Croissant folhado e amanteigado, perfeito para o café da manhã."
-        },
-        {
-          id: 4,
-          name: "Sonho",
-          quantity: 15,
-          unitPrice: 6.50,
-          description: "Massa fofinha recheada com creme de baunilha e polvilhada com açúcar."
-        },
-        {
-          id: 5,
-          name: "Pão de Queijo",
-          quantity: 50,
-          unitPrice: 2.50,
-          description: "Pão de queijo mineiro feito com queijo artesanal."
-        },
-        {
-          id: 6,
-          name: "Torta de Frango",
-          quantity: 8,
-          unitPrice: 45.00,
-          description: "Torta recheada com frango desfiado, milho e requeijão."
-        },
-        {
-          id: 7,
-          name: "Rosquinha de Canela",
-          quantity: 30,
-          unitPrice: 3.00,
-          description: "Rosquinha doce coberta com açúcar e canela."
-        }
       ],
       data: []
     };
@@ -122,6 +72,8 @@ export default {
     addNewProduct(){
       this.$q.dialog({
         component: ProductDialog,
+      }).onDismiss(async () => {
+        this.unfilteredData = await this.getProducts();
       })
     },
     editProduct(event, row){
@@ -131,11 +83,33 @@ export default {
           product: toRaw(row),
           action: 'edit'
         }
+      }).onDismiss(async () => {
+        this.unfilteredData = await this.getProducts();
+      })
+    },
+    async getProducts(){
+      await this.$axios.get("/products")
+      .then((res) => {
+        this.data = res.data;
+
+        return res.data;
+      }).catch((err) => {
+        this.$q.notify({
+          type: "negative",
+          message: "Erro ao buscar produtos :( - " + err.message,
+          position: "top",
+        });
       })
     }
   },
-  created(){
-    this.data = this.unfilteredData;
+  async created(){
+    this.unfilteredData = await this.getProducts();
   }
 };
 </script>
+
+<style scoped>
+  .q-page{
+    padding: 3em;
+  }
+</style>

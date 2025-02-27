@@ -5,7 +5,7 @@
     side="left" 
     elevated
   >
-    <q-list v-if="!currentUser.admin">
+    <q-list v-if="$currentUser().admin">
       <q-item 
         v-ripple 
         active-class="bg-brown-10"
@@ -88,7 +88,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
 
 export default {
   props: { 
@@ -105,7 +104,6 @@ export default {
     }
   },
   methods: {
-    ...mapGetters(['isAuthenticated', 'currentUser']),
     toggleLeftDrawer () {
       this.$emit('toggleLeftDrawer')
     }

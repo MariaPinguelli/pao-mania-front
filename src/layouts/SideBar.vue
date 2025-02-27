@@ -5,39 +5,7 @@
     side="left" 
     elevated
   >
-    <q-list>
-      <q-item 
-        v-ripple 
-        active-class="bg-brown-10"
-         to="/orderList"
-      >
-        <q-item-section avatar>
-          <q-icon name="local_mall" size="md"/>
-        </q-item-section>
-
-        <q-item-section>
-          <div>Meus Pedidos</div>
-        </q-item-section>
-      </q-item>
-
-      <q-separator />
-
-      <q-item 
-        v-ripple
-        active-class="bg-brown-10"
-        to="/menu"
-      >
-        <q-item-section avatar>
-          <q-icon name="bakery_dining" size="md"/>
-        </q-item-section>
-
-        <q-item-section>
-          <div>Produtos da Padaria</div>
-        </q-item-section>
-      </q-item>
-    </q-list>
-
-    <q-list>
+    <q-list v-if="!currentUser.admin">
       <q-item 
         v-ripple 
         active-class="bg-brown-10"
@@ -84,10 +52,43 @@
         </q-item-section>
       </q-item>
     </q-list>
+
+    <q-list v-else>
+      <q-item 
+        v-ripple 
+        active-class="bg-brown-10"
+         to="/orderList"
+      >
+        <q-item-section avatar>
+          <q-icon name="local_mall" size="md"/>
+        </q-item-section>
+
+        <q-item-section>
+          <div>Meus Pedidos</div>
+        </q-item-section>
+      </q-item>
+
+      <q-separator />
+
+      <q-item 
+        v-ripple
+        active-class="bg-brown-10"
+        to="/menu"
+      >
+        <q-item-section avatar>
+          <q-icon name="bakery_dining" size="md"/>
+        </q-item-section>
+
+        <q-item-section>
+          <div>Produtos da Padaria</div>
+        </q-item-section>
+      </q-item>
+    </q-list>
   </q-drawer>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 
 export default {
   props: { 
@@ -104,6 +105,7 @@ export default {
     }
   },
   methods: {
+    ...mapGetters(['isAuthenticated', 'currentUser']),
     toggleLeftDrawer () {
       this.$emit('toggleLeftDrawer')
     }

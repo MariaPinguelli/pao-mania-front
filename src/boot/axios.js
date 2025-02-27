@@ -1,4 +1,4 @@
-import { boot } from 'quasar';
+import { defineBoot } from '#q-app/wrappers';
 import axios from 'axios';
 import { LocalStorage } from 'quasar';
 
@@ -18,7 +18,7 @@ axiosInstance.interceptors.request.use((config) => {
   return config;
 });
 
-export default boot(({ app }) => {
+export default defineBoot(({ app }) => {
   app.config.globalProperties.$axios = axiosInstance;
   app.config.globalProperties.$api = axiosInstance;
 });

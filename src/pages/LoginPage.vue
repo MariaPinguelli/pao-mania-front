@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   data() {
@@ -66,18 +66,18 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(['isAuthenticated', 'currentUser']),
   },
   methods: {
+    ...mapActions(['login']),
     async logIn(){
-      axios.post(process.env.API_URL+"/users/sign_in", {
+      this.$axios.post("/users/sign_in", {
         user: {
           email: this.email,
           password: this.password,
         }
       }).then((res) => {
-
-        localStorage.setItem('currentUser', res.data.user);
-        localStorage.setItem('token', res.data.token);
+        this.login(res.data)
 
         this.$q.notify({
           type: "positive",
@@ -102,7 +102,6 @@ export default {
     }
   },
   created() {
-    
   },
 };
 </script>

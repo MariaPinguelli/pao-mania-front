@@ -15,13 +15,13 @@
           <q-icon name="person"/>
           <q-menu v-model="showProfileOptions">
             <q-list style="min-width: 100px">
-              <q-item clickable v-close-popup>
+              <!-- <q-item clickable v-close-popup>
                 Carrinho
-              </q-item>
-              <q-item clickable v-close-popup @click="$router.push('profile')">
+              </q-item> -->
+              <!-- <q-item clickable v-close-popup @click="$router.push('profile')">
                 Meu Perfil
-              </q-item>
-              <q-item clickable v-close-popup>
+              </q-item> -->
+              <q-item clickable v-close-popup @click="logout">
                 <q-icon name="output"/> 
                 <div style="margin-left: 0.5em">Sair</div>
               </q-item>
@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 
 export default {
   data(){
@@ -41,6 +42,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['logout']),
     toggleLeftDrawer () {
       this.$emit('toggleLeftDrawer')
     },

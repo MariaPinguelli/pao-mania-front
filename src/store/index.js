@@ -4,6 +4,7 @@ import createPersistedState from 'vuex-persistedstate';
 export default createStore({
   state: {
     user: null,
+    cartItems: [] 
   },
   mutations: {
     setUser(state, user) {
@@ -11,6 +12,15 @@ export default createStore({
     },
     logout(state) {
       state.user = null;
+    },
+    addItemToCart(state, item) {
+      state.cartItems.push(item);
+    },
+    removeItemFromCart(state, itemId) {
+      state.cartItems = state.cartItems.filter(item => item.product.id !== itemId);
+    },
+    clearCart(state) {
+      state.cartItems = [];
     },
   },
   actions: {
@@ -21,11 +31,22 @@ export default createStore({
     logout({ commit }) {
       localStorage.removeItem('token')
       commit('logout');
+      window.location.href = '/login';
+    },
+    addItemToCart({ commit }, item) {
+      commit('addItemToCart', item);
+    },
+    removeItemFromCart({ commit }, itemId) {
+      commit('removeItemFromCart', itemId);
+    },
+    clearCart({ commit }) {
+      commit('clearCart');
     },
   },
   getters: {
-    isAuthenticated: (state) => !!state.user,
     currentUser: (state) => state.user,
+    isAuthenticated: (state) => !!state.user,
+    cartItems: (state) => state.cartItems,
   },
   plugins: [createPersistedState()],
 });

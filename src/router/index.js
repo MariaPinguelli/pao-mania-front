@@ -1,7 +1,7 @@
 import { defineRouter } from '#q-app/wrappers'
 import { createRouter, createMemoryHistory, createWebHistory, createWebHashHistory } from 'vue-router'
 import routes from './routes'
-// import { store } from 'src/store'
+import store from 'src/store'
 
 export default defineRouter(function () {
   const createHistory = process.env.SERVER
@@ -14,15 +14,21 @@ export default defineRouter(function () {
     history: createHistory(process.env.VUE_ROUTER_BASE)
   })
 
-  // Router.beforeEach((to, from, next) => {
-  //   const user = store.state.user; 
-
-  //   if (to.path === '/users' && !user?.admin) {
-  //     next('/homepage'); // Redireciona caso não seja admin
-  //   } else {
-  //     next(); // Prossegue normalmente
-  //   }
-  // });
+  Router.beforeEach((to, from, next) => {
+    const user = store.getters.currentUser;
+    const isAuthenticated = store.getters.isAuthenticated;
+  
+    if (!isAuthenticated && to.path !== '/login') {
+      next('/login');
+    } else if (to.path.startsWith('/admin') && !user?.admin) {
+      next('/user/orders');
+    } else if (to.path.startsWith('/user') && user?.admin) {
+      next('/admin/orders');
+    } else {
+      next();
+    }
+  });
+  
 
   return Router
 })

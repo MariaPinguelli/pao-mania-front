@@ -9,7 +9,7 @@
       <q-item 
         v-ripple 
         active-class="bg-brown-10"
-        to="/users"
+        to="/admin/users"
       >
         <q-item-section avatar>
           <q-icon name="group" size="md"/>
@@ -25,7 +25,7 @@
       <q-item 
         v-ripple
         active-class="bg-brown-10"
-        to="/orders"
+        to="/admin/orders"
       >
         <q-item-section avatar>
           <q-icon name="local_mall" size="md"/>
@@ -41,7 +41,7 @@
       <q-item 
         v-ripple
         active-class="bg-brown-10"
-        to="/products"
+        to="/admin/products"
       >
         <q-item-section avatar>
           <q-icon name="bakery_dining" size="md"/>
@@ -57,7 +57,7 @@
       <q-item 
         v-ripple 
         active-class="bg-brown-10"
-         to="/orderList"
+        to="/user/orders"
       >
         <q-item-section avatar>
           <q-icon name="local_mall" size="md"/>
@@ -73,14 +73,14 @@
       <q-item 
         v-ripple
         active-class="bg-brown-10"
-        to="/menu"
+        to="/user/menu"
       >
         <q-item-section avatar>
           <q-icon name="bakery_dining" size="md"/>
         </q-item-section>
 
         <q-item-section>
-          <div>Produtos da Padaria</div>
+          <div>Padaria</div>
         </q-item-section>
       </q-item>
     </q-list>

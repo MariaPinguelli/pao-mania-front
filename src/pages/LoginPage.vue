@@ -82,7 +82,11 @@ export default {
           position: "top",
         });
 
-        this.$router.push("users");
+        if (res.data.user.admin) {
+          this.$router.push("users");
+        } else {
+          this.$router.push("user/orders");
+        }
       }).catch((err) => {
         this.$q.notify({
           type: "negative",

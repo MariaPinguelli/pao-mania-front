@@ -21,14 +21,9 @@ const routes = [
     ],
   },
   {
-    path: "/",
+    path: "/admin",
     component: () => import("layouts/MainLayout.vue"),
     children: [
-      {
-        path: "homepage",
-        name: "homepage",
-        component: () => import("pages/HomePage.vue"),
-      },
       {
         path: "users",
         name: "users",
@@ -37,12 +32,27 @@ const routes = [
         path: "products",
         component: () => import("pages/ProductsPage.vue"),
         name: "products",
-      },
-      { 
+      },{ 
         path: 'orders', 
         component: () => import('pages/OrdersPage.vue'),
         name: "orders"
       }
+    ]
+  },
+  {
+    path: "/user",
+    component: () => import("layouts/MainLayout.vue"),
+    children: [
+      {
+        path: "orders",
+        name: "orders",
+        component: () => import("pages/UserOrders.vue"),
+      },
+      {
+        path: "menu",
+        name: "menu",
+        component: () => import("pages/MenuPage.vue"),
+      },
     ]
   },
   {

@@ -9,16 +9,16 @@
             Fechar
           </div>
         </div>
-        <div style="margin-bottom: 2em" class="q-mt-md">Deseja excluir ou confirmar o pedido?</div>
+        <div style="margin-bottom: 2em" class="q-mt-md">Deseja cancelar ou confirmar o pedido?</div>
       </q-card-section>
 
       <q-card-actions align="right">
-        <q-btn label="Excluir" color="red-8" @click="confirm('delete')" />
+        <q-btn label="Cancelar pedido" color="red-8" @click="confirm('cancelado')" />
 
         <q-btn 
           :label="'Confirmar retirada'"
           :color="'blue-8'"
-          @click="confirm('confirmPickup')"
+          @click="confirm('retirado')"
         />
       </q-card-actions>
     </q-card>
@@ -42,13 +42,6 @@ export default {
     },
     onDialogCancel() {
       this.isVisible = false;
-    }
-  },
-  watch: {
-    isVisible(val) {
-      if (!val) {
-        this.$emit("hide");
-      }
     }
   }
 };

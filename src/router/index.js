@@ -17,18 +17,24 @@ export default defineRouter(function () {
   Router.beforeEach((to, from, next) => {
     const user = store.getters.currentUser;
     const isAuthenticated = store.getters.isAuthenticated;
-  
+    
     if (!isAuthenticated && to.path !== '/login') {
       next('/login');
-    } else if (to.path.startsWith('/admin') && !user?.admin) {
-      next('/user/orders');
-    } else if (to.path.startsWith('/user') && user?.admin) {
-      next('/admin/orders');
-    } else {
-      next();
+    }else{
+    
+      if (to.path.startsWith('/admin')) {
+        if (!user?.admin) {
+          next('/user/orders');
+        } else {
+          next(); 
+        }
+      } else if (to.path.startsWith('/user') && user?.admin) {
+        next('/admin/orders');
+      } else {
+        next();
+      }
     }
   });
   
-
   return Router
 })

@@ -33,9 +33,9 @@ const routes = [
         component: () => import("pages/ProductsPage.vue"),
         name: "products",
       },{ 
-        path: 'orders', 
-        component: () => import('pages/OrdersPage.vue'),
-        name: "orders"
+        path: "orders", 
+        component: () => import("pages/OrdersPage.vue"),
+        name: "admin-orders"
       }
     ]
   },
@@ -45,7 +45,7 @@ const routes = [
     children: [
       {
         path: "orders",
-        name: "orders",
+        name: "user-orders",
         component: () => import("pages/UserOrders.vue"),
       },
       {

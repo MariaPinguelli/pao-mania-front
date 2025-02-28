@@ -83,7 +83,7 @@ export default {
         });
 
         if (res.data.user.admin) {
-          this.$router.push("users");
+          this.$router.push("admin/orders");
         } else {
           this.$router.push("user/orders");
         }
